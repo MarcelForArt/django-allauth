@@ -6,12 +6,15 @@ from django.core.exceptions import ImproperlyConfigured
 
 import jwt
 
+import logging
+
 from allauth.socialaccount.adapter import get_adapter
 from allauth.socialaccount.providers.oauth2.client import (
     OAuth2Client,
     OAuth2Error,
 )
 
+logger = logging.getLogger(__name__)
 
 class Scope(object):
     EMAIL = "email"
@@ -61,6 +64,10 @@ class AppleOAuth2Client(OAuth2Client):
             "client_secret": client_secret,
         }
         self._strip_empty_keys(data)
+        logger.debug(f'[django-allauth] Token request:'
+                     f'{self.access_token_method} {url},'
+                     f' data: {data},'
+                     f' headers: {self.headers}')
         resp = requests.request(
             self.access_token_method, url, data=data, headers=self.headers
         )
