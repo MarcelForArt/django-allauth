@@ -2,6 +2,10 @@ from allauth.account.models import EmailAddress
 from allauth.socialaccount.app_settings import QUERY_EMAIL
 from allauth.socialaccount.providers.base import ProviderAccount
 from allauth.socialaccount.providers.oauth2.provider import OAuth2Provider
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class AppleProvider(OAuth2Provider):
@@ -13,6 +17,7 @@ class AppleProvider(OAuth2Provider):
         return str(data["sub"])
 
     def extract_common_fields(self, data):
+        logger.debug(f'[apple] The data we obtained was {data}')
         fields = {"email": data.get("email")}
 
         # If the name was provided
